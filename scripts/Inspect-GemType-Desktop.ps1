@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory=$true)]
     [string]$SourceRoot,
 
@@ -30,10 +30,13 @@ $rootCopy = Join-Path $OutputRoot "Repository-Metadata"
 New-Item -ItemType Directory -Path $sourceCopy,$rootCopy -Force | Out-Null
 
 # Copy the entire desktop source. This is intentionally source-only.
-Copy-Item -LiteralPath (Join-Path $DesktopRoot "*") `
-    -Destination $sourceCopy `
-    -Recurse `
-    -Force
+# Use Get-ChildItem -Force because -LiteralPath intentionally does NOT
+# expand wildcard characters such as "*".
+Get-ChildItem -LiteralPath $DesktopRoot -Force |
+    Copy-Item `
+        -Destination $sourceCopy `
+        -Recurse `
+        -Force
 
 foreach ($relative in @(
     "README.md",
