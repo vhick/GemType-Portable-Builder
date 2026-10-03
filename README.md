@@ -1,51 +1,32 @@
-# GemType Portable Builder — Inspection Edition
+# GemType True-Portable Builder
 
-This temporary builder does **not** compile GemType yet.
+This builder creates a Windows **electron-builder portable target** from your clean synced `GemType` fork.
 
-Its only job is to inspect the exact current desktop source from your clean `GemType` fork so the true-portable patch can be written safely.
+The source patch redirects:
 
-## Why inspect first?
+- Electron `userData` → `.\Data\UserData`
+- Electron `sessionData` → `.\Data\SessionData`
+- logs → `.\Data\Logs`
+- crash dumps → `.\Data\CrashDumps`
 
-GemType Desktop is an Electron app. Electron normally stores application configuration under `userData`, and browser/session storage under `sessionData`.
+The inspected upstream desktop app stores its API key, model and language together in `settings.json` under `userData`. Therefore the API key becomes portable automatically at:
 
-A true portable build can normally redirect those paths beside the executable, but the API key and settings must first be checked in the actual GemType desktop source.
+`.\Data\UserData\settings.json`
 
-The inspection collects source code only.
+It remains plain JSON, matching upstream behavior.
 
-It does **not** read:
-- your Gemini API key;
-- your AppData;
-- Windows Credential Manager;
-- your registry;
-- your clipboard;
-- any local GemType data.
+## Normal build
 
-## Repository name
+Actions → Build GemType Portable → Run workflow → `portable-data`
 
-Create a normal repository named exactly:
+## Future-source diagnostics
 
-`GemType-Portable-Builder`
+If a future upstream update breaks the patch, use:
 
-## Source fork
+`inspect-source`
 
-Create a clean fork named exactly:
+and send the artifact to ChatGPT.
 
-`GemType`
+## Trademark
 
-from:
-
-`riponcm/GemType`
-
-Your existing Universal Fork Sync will already keep that fork synchronized because it discovers all of your forks.
-
-Do not put custom portable patches in the clean `GemType` fork.
-
-## First action
-
-Run the GitHub workflow manually and download:
-
-`GemType-Desktop-Inspection-<commit>`
-
-Then upload that artifact to ChatGPT.
-
-After that inspection, replace this temporary repository content with the final true-portable builder.
+The upstream repository states that the GemType name/logo are trademarks and asks redistributed forks to use a distinct name/icon. This builder is intended for personal/private use. Rebrand before public redistribution.
